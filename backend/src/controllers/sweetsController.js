@@ -196,3 +196,117 @@ exports.deleteSweet = async (req, res) => {
     });
   }
 };
+
+// @desc    Purchase a sweet (reduce quantity)
+// @route   POST /api/sweets/:id/purchase
+// @access  Protected
+exports.purchaseSweet = async (req, res) => {
+  try {
+    const { quantity } = req.body;
+
+    // Validate quantity
+    if (!quantity || quantity === undefined) {
+      return res.status(400).json({
+        error: 'Please provide a quantity'
+      });
+    }
+
+    if (quantity <= 0) {
+      return res.status(400).json({
+        error: 'Quantity must be greater than zero'
+      });
+    }
+
+    // Find the sweet
+    const sweet = await Sweet.findById(req.params.id);
+
+    if (!sweet) {
+      return res.status(404).json({
+        error: 'Sweet not found'
+      });
+    }
+
+    // Check if sweet is in stock
+    if (sweet.quantity === 0) {
+      return res.status(400).json({
+        error: 'Sweet is out of stock'
+      });
+    }
+
+    // Check if sufficient quantity available
+    if (sweet.quantity < quantity) {
+      return res.status(400).json({
+        error: 'Insufficient quantity available'
+      });
+    }
+
+    // Reduce quantity
+    sweet.quantity -= quantity;
+    await sweet.save();
+
+    res.status(200).json({
+      message: 'Purchase successful',
+      sweet
+    });
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(404).json({
+        error: 'Sweet not found'
+      });
+    }
+
+    res.status(500).json({
+      error: 'Server error while processing purchase'
+    });
+  }
+};
+
+// @desc    Restock a sweet (increase quantity)
+// @route   POST /api/sweets/:id/restock
+// @access  Protected (Admin only)
+exports.restockSweet = async (req, res) => {
+  try {
+    const { quantity } = req.body;
+
+    // Validate quantity
+    if (!quantity || quantity === undefined) {
+      return res.status(400).json({
+        error: 'Please provide a quantity'
+      });
+    }
+
+    if (quantity <= 0) {
+      return res.status(400).json({
+        error: 'Quantity must be greater than zero'
+      });
+    }
+
+    // Find the sweet
+    const sweet = await Sweet.findById(req.params.id);
+
+    if (!sweet) {
+      return res.status(404).json({
+        error: 'Sweet not found'
+      });
+    }
+
+    // Increase quantity
+    sweet.quantity += quantity;
+    await sweet.save();
+
+    res.status(200).json({
+      message: 'Restock successful',
+      sweet
+    });
+  } catch (error) {
+    if (error.name === 'CastError') {
+      return res.status(404).json({
+        error: 'Sweet not found'
+      });
+    }
+
+    res.status(500).json({
+      error: 'Server error while restocking sweet'
+    });
+  }
+};
