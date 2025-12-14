@@ -48,7 +48,8 @@ const AdminPanel = () => {
     try {
       setLoading(true);
       const response = await sweetsAPI.getAll();
-      setSweets(response.data);
+      const sweetsData = response.data.sweets || response.data || [];
+      setSweets(sweetsData);
       setError('');
     } catch (err: any) {
       setError('Failed to load sweets. Please try again.');

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
 
 interface User {
   id: string;
@@ -31,8 +31,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
     if (storedToken && storedUser) {
       try {
+        const parsedUser = JSON.parse(storedUser);
         setToken(storedToken);
-        setUser(JSON.parse(storedUser));
+        setUser(parsedUser);
       } catch (error) {
         console.error('Error parsing stored user:', error);
         localStorage.removeItem('token');

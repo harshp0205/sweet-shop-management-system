@@ -1,4 +1,4 @@
-import { useState, FormEvent } from 'react';
+import { useState, useEffect, type FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
@@ -11,13 +11,24 @@ interface LoginFormData {
 
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, isAuthenticated, isAdmin } = useAuth();
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     password: '',
   });
   const [error, setError] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
+
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      if (isAdmin) {
+        navigate('/admin', { replace: true });
+      } else {
+        navigate('/dashboard', { replace: true });
+      }
+    }
+  }, [isAuthenticated, isAdmin, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -36,12 +47,19 @@ const Login = () => {
       const response = await authAPI.login(formData);
       const { token, user } = response.data;
 
+      console.log('Login successful, user:', user);
+
       // Use AuthContext login method
       login(token, user);
 
-      // Redirect to home page
-      navigate('/');
+      // Redirect based on role
+      if (user.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err: any) {
+      console.error('Login error:', err);
       setError(err.response?.data?.error || 'Login failed. Please try again.');
     } finally {
       setLoading(false);

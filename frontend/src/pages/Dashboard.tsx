@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { sweetsAPI } from '../services/api';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/Navbar.tsx';
 import '../styles/Dashboard.css';
 
 interface Sweet {
@@ -14,6 +14,7 @@ interface Sweet {
 
 const Dashboard = () => {
   const { user } = useAuth();
+  console.log('[Dashboard] Rendering, user:', user);
   const [sweets, setSweets] = useState<Sweet[]>([]);
   const [filteredSweets, setFilteredSweets] = useState<Sweet[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -32,6 +33,7 @@ const Dashboard = () => {
   const [purchaseLoading, setPurchaseLoading] = useState<boolean>(false);
 
   useEffect(() => {
+    console.log('[Dashboard] Component mounted, fetching sweets');
     fetchSweets();
   }, []);
 
@@ -42,14 +44,21 @@ const Dashboard = () => {
   const fetchSweets = async () => {
     try {
       setLoading(true);
-      const response = await sweetsAPI.getAll();
-      setSweets(response.data);
-      setFilteredSweets(response.data);
       setError('');
+      console.log('[Dashboard] Fetching sweets...');
+      const response = await sweetsAPI.getAll();
+      const sweetsData = response.data.sweets || response.data || [];
+      console.log('[Dashboard] Sweets fetched:', sweetsData.length);
+      setSweets(sweetsData);
+      setFilteredSweets(sweetsData);
     } catch (err: any) {
-      setError('Failed to load sweets. Please try again.');
+      console.error('[Dashboard] Failed to fetch sweets:', err);
+      if (err.response?.status !== 401) {
+        setError('Failed to load sweets. Please try again.');
+      }
     } finally {
       setLoading(false);
+      console.log('[Dashboard] Fetch complete');
     }
   };
 
@@ -67,7 +76,8 @@ const Dashboard = () => {
       if (maxPrice) params.maxPrice = parseFloat(maxPrice);
 
       const response = await sweetsAPI.search(params);
-      setFilteredSweets(response.data);
+      const searchResults = response.data.sweets || response.data || [];
+      setFilteredSweets(searchResults);
     } catch (err: any) {
       console.error('Search error:', err);
       setFilteredSweets([]);

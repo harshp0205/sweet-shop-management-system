@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auth Test</title>
+</head>
+<body>
+    <h1>LocalStorage Auth Test</h1>
+    <div id="output"></div>
+    <script>
+        const token = localStorage.getItem('token');
+        const user = localStorage.getItem('user');
+        
+        const output = document.getElementById('output');
+        output.innerHTML = `
+            <p><strong>Token:</strong> ${token || 'NOT FOUND'}</p>
+            <p><strong>User:</strong> ${user || 'NOT FOUND'}</p>
+            ${user ? `<p><strong>Parsed User:</strong> ${JSON.stringify(JSON.parse(user), null, 2)}</p>` : ''}
+        `;
+        
+        console.log('Token:', token);
+        console.log('User:', user);
+    </script>
+</body>
+</html>

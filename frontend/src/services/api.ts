@@ -26,11 +26,20 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.log('[API] Error response:', error.response?.status, error.response?.data);
     if (error.response?.status === 401) {
-      // Token expired or invalid
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      window.location.href = '/login';
+      // Token expired or invalid - only redirect if not already on login page
+      const currentPath = window.location.pathname;
+      console.log('[API] 401 error, current path:', currentPath);
+      if (currentPath !== '/login' && currentPath !== '/register') {
+        console.log('[API] Clearing auth and redirecting to login');
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        // Use a small delay to prevent redirect loops
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 100);
+      }
     }
     return Promise.reject(error);
   }

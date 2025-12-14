@@ -1,6 +1,6 @@
 .dashboard {
   min-height: 100vh;
-  background-color: #f5f7fa;
+  background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
 }
 
 .dashboard-container {
@@ -11,31 +11,50 @@
 
 .dashboard-header {
   margin-bottom: 40px;
+  text-align: center;
+  animation: fadeIn 0.6s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dashboard-header h1 {
-  font-size: 32px;
-  color: #333;
+  font-size: 36px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 8px;
+  font-weight: 700;
 }
 
 .dashboard-header p {
   color: #666;
-  font-size: 16px;
+  font-size: 18px;
 }
 
 .search-section {
   background: white;
-  border-radius: 12px;
-  padding: 30px;
-  margin-bottom: 30px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
+  padding: 32px;
+  margin-bottom: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(102, 126, 234, 0.1);
 }
 
 .search-section h2 {
-  font-size: 20px;
-  margin-bottom: 20px;
+  font-size: 22px;
+  margin-bottom: 24px;
   color: #333;
+  font-weight: 600;
 }
 
 .search-filters {
@@ -46,17 +65,21 @@
 
 .search-input,
 .search-select {
-  padding: 12px 16px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 14px 18px;
+  border: 2px solid #e0e0e0;
+  border-radius: 10px;
+  font-size: 15px;
+  background-color: #f9f9f9;
+  transition: all 0.3s ease;
 }
 
 .search-input:focus,
 .search-select:focus {
   outline: none;
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  background-color: white;
+  box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+  transform: translateY(-2px);
 }
 
 .price-input {
@@ -71,15 +94,18 @@
 
 .sweet-card {
   background: white;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s, box-shadow 0.2s;
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+  cursor: pointer;
 }
 
 .sweet-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 30px rgba(102, 126, 234, 0.2);
+  border-color: rgba(102, 126, 234, 0.3);
 }
 
 .sweet-header {
@@ -90,21 +116,23 @@
 }
 
 .sweet-header h3 {
-  font-size: 20px;
+  font-size: 22px;
   color: #333;
   margin: 0;
   flex: 1;
+  font-weight: 600;
 }
 
 .category-badge {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
-  padding: 4px 12px;
-  border-radius: 12px;
+  padding: 6px 14px;
+  border-radius: 20px;
   font-size: 12px;
   font-weight: 600;
   white-space: nowrap;
   margin-left: 8px;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 .sweet-details {
@@ -112,10 +140,13 @@
 }
 
 .price {
-  font-size: 24px;
+  font-size: 28px;
   font-weight: 700;
-  color: #667eea;
-  margin: 8px 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 12px 0;
 }
 
 .stock {
@@ -220,25 +251,35 @@
 .btn-primary {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 
 .btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5);
+}
+
+.btn-primary:active:not(:disabled) {
+  transform: translateY(-1px);
 }
 
 .btn-primary:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
+  background: #ccc;
+  box-shadow: none;
 }
 
 .btn-secondary {
-  background: #f5f5f5;
+  background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
   color: #333;
+  border: 2px solid #ddd;
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background: #e0e0e0;
+  background: linear-gradient(135deg, #e8e8e8 0%, #d0d0d0 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 768px) {
