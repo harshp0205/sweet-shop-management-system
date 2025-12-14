@@ -1,14 +1,12 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
 import { sweetsAPI } from '../services/api';
 import Navbar from '../components/Navbar.tsx';
 import '../styles/Cart.css';
 
 const Cart = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
   const { cart, updateQuantity, removeFromCart, clearCart, getTotalItems, getTotalPrice } = useCart();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
