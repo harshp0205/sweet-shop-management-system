@@ -4,6 +4,7 @@ require('dotenv').config();
 
 // Import routes
 const authRoutes = require('./routes/authRoutes');
+const sweetsRoutes = require('./routes/sweetsRoutes');
 
 const app = express();
 
@@ -19,7 +20,7 @@ app.get('/health', (req, res) => {
 
 // Routes
 app.use('/api/auth', authRoutes);
-// app.use('/api/sweets', sweetsRoutes);
+app.use('/api/sweets', sweetsRoutes);
 
 // Error handling middleware
 app.use((err, req, res, next) => {

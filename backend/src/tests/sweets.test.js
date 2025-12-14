@@ -18,8 +18,8 @@ describe('Sweets API', () => {
     const userResponse = await request(app)
       .post('/api/auth/register')
       .send({
-        name: 'Regular User',
-        email: 'user@example.com',
+        name: 'Sweet User',
+        email: 'sweetuser@example.com',
         password: 'password123',
         role: 'user'
       });
@@ -30,19 +30,14 @@ describe('Sweets API', () => {
     const adminResponse = await request(app)
       .post('/api/auth/register')
       .send({
-        name: 'Admin User',
-        email: 'admin@example.com',
+        name: 'Sweet Admin',
+        email: 'sweetadmin@example.com',
         password: 'password123',
         role: 'admin'
       });
     adminToken = adminResponse.body.token;
     adminId = adminResponse.body.user.id;
   }, 30000);
-
-  // Setup: Clear sweets before each test
-  beforeEach(async () => {
-    await Sweet.deleteMany({});
-  }, 10000);
 
   // Cleanup: Close database connection after all tests
   afterAll(async () => {
@@ -52,6 +47,10 @@ describe('Sweets API', () => {
   }, 10000);
 
   describe('POST /api/sweets', () => {
+    beforeEach(async () => {
+      await Sweet.deleteMany({});
+    });
+
     it('should successfully add a new sweet with valid authentication', async () => {
       const newSweet = {
         name: 'Chocolate Truffle',
@@ -121,6 +120,7 @@ describe('Sweets API', () => {
 
   describe('GET /api/sweets', () => {
     beforeEach(async () => {
+      await Sweet.deleteMany({});
       // Create sample sweets
       await request(app)
         .post('/api/sweets')
@@ -151,7 +151,7 @@ describe('Sweets API', () => {
           price: 1.99,
           quantity: 150
         });
-    });
+    }, 10000);
 
     it('should get all sweets', async () => {
       const response = await request(app).get('/api/sweets');
@@ -174,6 +174,7 @@ describe('Sweets API', () => {
 
   describe('GET /api/sweets/search', () => {
     beforeEach(async () => {
+      await Sweet.deleteMany({});
       // Create sample sweets for searching
       await request(app)
         .post('/api/sweets')
@@ -214,7 +215,7 @@ describe('Sweets API', () => {
           price: 2.99,
           quantity: 120
         });
-    });
+    }, 10000);
 
     it('should search sweets by name', async () => {
       const response = await request(app)
@@ -278,6 +279,7 @@ describe('Sweets API', () => {
     let sweetId;
 
     beforeEach(async () => {
+      await Sweet.deleteMany({});
       const response = await request(app)
         .post('/api/sweets')
         .set('Authorization', `Bearer ${userToken}`)
@@ -288,7 +290,7 @@ describe('Sweets API', () => {
           quantity: 50
         });
       sweetId = response.body.sweet._id;
-    });
+    }, 10000);
 
     it('should successfully update a sweet with valid authentication', async () => {
       const response = await request(app)
@@ -348,6 +350,7 @@ describe('Sweets API', () => {
     let sweetId;
 
     beforeEach(async () => {
+      await Sweet.deleteMany({});
       const response = await request(app)
         .post('/api/sweets')
         .set('Authorization', `Bearer ${userToken}`)
@@ -358,7 +361,7 @@ describe('Sweets API', () => {
           quantity: 25
         });
       sweetId = response.body.sweet._id;
-    });
+    }, 10000);
 
     it('should successfully delete a sweet as admin', async () => {
       const response = await request(app)
