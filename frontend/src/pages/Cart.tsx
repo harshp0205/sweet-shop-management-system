@@ -22,6 +22,10 @@ const Cart = () => {
     try {
       // Process each item in cart
       for (const item of cart) {
+        if (!item.sweetId) {
+          throw new Error(`Invalid item: ${item.name} has no ID`);
+        }
+        console.log(`Purchasing: ${item.name} (ID: ${item.sweetId}) x${item.quantity}`);
         await sweetsAPI.purchase(item.sweetId, item.quantity);
       }
 
@@ -34,7 +38,7 @@ const Cart = () => {
       }, 2000);
     } catch (err: any) {
       console.error('Checkout error:', err);
-      setError(err.response?.data?.error || 'Failed to complete purchase. Please try again.');
+      setError(err.response?.data?.error || err.message || 'Failed to complete purchase. Please try again.');
     } finally {
       setLoading(false);
     }

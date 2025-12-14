@@ -33,24 +33,26 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   const addToCart = (sweet: any) => {
     setCart((prevCart) => {
-      const existingItem = prevCart.find(item => item.sweetId === sweet._id);
+      // Handle both _id (from Sweet object) and sweetId (from CartItem object)
+      const id = sweet.sweetId || sweet._id;
+      const existingItem = prevCart.find(item => item.sweetId === id);
       
       if (existingItem) {
         // Update quantity if item exists
         return prevCart.map(item =>
-          item.sweetId === sweet._id
+          item.sweetId === id
             ? { ...item, quantity: Math.min(item.quantity + 1, item.maxQuantity) }
             : item
         );
       } else {
         // Add new item
         return [...prevCart, {
-          sweetId: sweet._id,
+          sweetId: id,
           name: sweet.name,
           category: sweet.category,
           price: sweet.price,
-          quantity: 1,
-          maxQuantity: sweet.quantity
+          quantity: sweet.quantity || 1,
+          maxQuantity: sweet.maxQuantity || sweet.quantity
         }];
       }
     });
