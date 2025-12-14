@@ -4,15 +4,21 @@ const app = require('../app');
 const User = require('../models/User');
 
 describe('Auth API', () => {
+  // Setup: Connect to test database before all tests
+  beforeAll(async () => {
+    await mongoose.connect(process.env.MONGODB_URI);
+  }, 30000);
+
   // Setup: Clear users before each test
   beforeEach(async () => {
     await User.deleteMany({});
-  });
+  }, 10000);
 
   // Cleanup: Close database connection after all tests
   afterAll(async () => {
+    await User.deleteMany({});
     await mongoose.connection.close();
-  });
+  }, 10000);
 
   describe('POST /api/auth/register', () => {
     it('should successfully register a new user', async () => {
