@@ -202,7 +202,7 @@ const AdminPanel = () => {
 
             <div className="form-row">
               <div className="form-group">
-                <label htmlFor="price">Price ($) *</label>
+                <label htmlFor="price">Price (₹) *</label>
                 <input
                   type="number"
                   id="price"
@@ -275,7 +275,7 @@ const AdminPanel = () => {
                       <td>
                         <span className="category-badge">{sweet.category}</span>
                       </td>
-                      <td>${sweet.price.toFixed(2)}</td>
+                      <td>₹{sweet.price.toFixed(2)}</td>
                       <td>
                         <span className={sweet.quantity === 0 ? 'low-stock' : ''}>
                           {sweet.quantity}

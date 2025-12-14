@@ -201,7 +201,7 @@ const Dashboard = () => {
                   <span className="category-badge">{sweet.category}</span>
                 </div>
                 <div className="sweet-details">
-                  <p className="price">${sweet.price.toFixed(2)}</p>
+                  <p className="price">₹{sweet.price.toFixed(2)}</p>
                   <p className={`stock ${sweet.quantity === 0 ? 'out-of-stock' : ''}`}>
                     Stock: {sweet.quantity}
                   </p>
@@ -226,7 +226,7 @@ const Dashboard = () => {
             <h2>Purchase {selectedSweet.name}</h2>
             <div className="modal-content">
               <p><strong>Category:</strong> {selectedSweet.category}</p>
-              <p><strong>Price:</strong> ${selectedSweet.price.toFixed(2)}</p>
+              <p><strong>Price:</strong> ₹{selectedSweet.price.toFixed(2)}</p>
               <p><strong>Available:</strong> {selectedSweet.quantity}</p>
               
               <div className="form-group">
@@ -242,7 +242,7 @@ const Dashboard = () => {
               </div>
 
               <p className="total-price">
-                <strong>Total:</strong> ${(selectedSweet.price * purchaseQuantity).toFixed(2)}
+                <strong>Total:</strong> ₹{(selectedSweet.price * purchaseQuantity).toFixed(2)}
               </p>
             </div>
 
