@@ -6,6 +6,9 @@ require('dotenv').config();
 const authRoutes = require('./routes/authRoutes');
 const sweetsRoutes = require('./routes/sweetsRoutes');
 
+// Import middleware
+const errorHandler = require('./middleware/errorHandler');
+
 const app = express();
 
 // Middleware
@@ -22,14 +25,7 @@ app.get('/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/sweets', sweetsRoutes);
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(err.status || 500).json({
-    error: {
-      message: err.message || 'Internal Server Error'
-    }
-  });
-});
+// Error handling middleware (must be last)
+app.use(errorHandler);
 
 module.exports = app;
