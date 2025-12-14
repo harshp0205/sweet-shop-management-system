@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 import { sweetsAPI } from '../services/api';
 import Navbar from '../components/Navbar.tsx';
 import '../styles/Dashboard.css';
@@ -14,6 +15,7 @@ interface Sweet {
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const { addToCart } = useCart();
   console.log('[Dashboard] Rendering, user:', user);
   const [sweets, setSweets] = useState<Sweet[]>([]);
   const [filteredSweets, setFilteredSweets] = useState<Sweet[]>([]);
@@ -26,11 +28,6 @@ const Dashboard = () => {
   const [searchCategory, setSearchCategory] = useState<string>('');
   const [minPrice, setMinPrice] = useState<string>('');
   const [maxPrice, setMaxPrice] = useState<string>('');
-  
-  // Purchase modal
-  const [selectedSweet, setSelectedSweet] = useState<Sweet | null>(null);
-  const [purchaseQuantity, setPurchaseQuantity] = useState<number>(1);
-  const [purchaseLoading, setPurchaseLoading] = useState<boolean>(false);
 
   useEffect(() => {
     console.log('[Dashboard] Component mounted, fetching sweets');
@@ -84,34 +81,17 @@ const Dashboard = () => {
     }
   };
 
-  const handlePurchase = async () => {
-    if (!selectedSweet) return;
-
-    if (purchaseQuantity < 1) {
-      setError('Quantity must be at least 1');
-      return;
-    }
-
-    if (purchaseQuantity > selectedSweet.quantity) {
-      setError('Not enough stock available');
-      return;
-    }
-
-    setPurchaseLoading(true);
-    setError('');
-
-    try {
-      await sweetsAPI.purchase(selectedSweet._id, purchaseQuantity);
-      setSuccessMessage(`Successfully purchased ${purchaseQuantity} ${selectedSweet.name}(s)!`);
-      setSelectedSweet(null);
-      setPurchaseQuantity(1);
-      fetchSweets(); // Refresh list
-      setTimeout(() => setSuccessMessage(''), 3000);
-    } catch (err: any) {
-      setError(err.response?.data?.error || 'Purchase failed. Please try again.');
-    } finally {
-      setPurchaseLoading(false);
-    }
+  const handleAddToCart = (sweet: Sweet) => {
+    addToCart({
+      sweetId: sweet._id,
+      name: sweet.name,
+      category: sweet.category,
+      price: sweet.price,
+      quantity: 1,
+      maxQuantity: sweet.quantity,
+    });
+    setSuccessMessage(`Added ${sweet.name} to cart!`);
+    setTimeout(() => setSuccessMessage(''), 2000);
   };
 
   const clearFilters = () => {
@@ -208,63 +188,16 @@ const Dashboard = () => {
                 </div>
                 <button
                   className="btn btn-primary"
-                  onClick={() => setSelectedSweet(sweet)}
+                  onClick={() => handleAddToCart(sweet)}
                   disabled={sweet.quantity === 0}
                 >
-                  {sweet.quantity === 0 ? 'Out of Stock' : 'Purchase'}
+                  {sweet.quantity === 0 ? 'Out of Stock' : '🛒 Add to Cart'}
                 </button>
               </div>
             ))}
           </div>
         )}
       </div>
-
-      {/* Purchase Modal */}
-      {selectedSweet && (
-        <div className="modal-overlay" onClick={() => setSelectedSweet(null)}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
-            <h2>Purchase {selectedSweet.name}</h2>
-            <div className="modal-content">
-              <p><strong>Category:</strong> {selectedSweet.category}</p>
-              <p><strong>Price:</strong> ₹{selectedSweet.price.toFixed(2)}</p>
-              <p><strong>Available:</strong> {selectedSweet.quantity}</p>
-              
-              <div className="form-group">
-                <label htmlFor="quantity">Quantity:</label>
-                <input
-                  type="number"
-                  id="quantity"
-                  min="1"
-                  max={selectedSweet.quantity}
-                  value={purchaseQuantity}
-                  onChange={(e) => setPurchaseQuantity(parseInt(e.target.value) || 1)}
-                />
-              </div>
-
-              <p className="total-price">
-                <strong>Total:</strong> ₹{(selectedSweet.price * purchaseQuantity).toFixed(2)}
-              </p>
-            </div>
-
-            <div className="modal-actions">
-              <button
-                className="btn btn-secondary"
-                onClick={() => setSelectedSweet(null)}
-                disabled={purchaseLoading}
-              >
-                Cancel
-              </button>
-              <button
-                className="btn btn-primary"
-                onClick={handlePurchase}
-                disabled={purchaseLoading}
-              >
-                {purchaseLoading ? 'Processing...' : 'Confirm Purchase'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -101,6 +101,26 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
+.cart-link {
+  position: relative;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  color: white;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 10px;
+  min-width: 20px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(220, 53, 69, 0.4);
+  animation: pulse 2s ease-in-out infinite;
+}
+
 @media (max-width: 768px) {
   .navbar-container {
     flex-direction: column;
