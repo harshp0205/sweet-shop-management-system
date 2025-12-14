@@ -1,6 +1,7 @@
 import { useState, FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authAPI } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import '../styles/Auth.css';
 
 interface RegisterFormData {
@@ -12,6 +13,7 @@ interface RegisterFormData {
 
 const Register = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState<RegisterFormData>({
     name: '',
     email: '',
@@ -52,9 +54,8 @@ const Register = () => {
       const response = await authAPI.register(registerData);
       const { token, user } = response.data;
 
-      // Store token and user in localStorage
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      // Use AuthContext login method
+      login(token, user);
 
       // Redirect to home page
       navigate('/');

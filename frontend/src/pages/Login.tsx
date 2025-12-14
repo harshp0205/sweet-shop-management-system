@@ -1,6 +1,7 @@
 import { useState, FormEvent } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { authAPI } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import '../styles/Auth.css';
 
 interface LoginFormData {
@@ -10,6 +11,7 @@ interface LoginFormData {
 
 const Login = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
     password: '',
@@ -34,9 +36,8 @@ const Login = () => {
       const response = await authAPI.login(formData);
       const { token, user } = response.data;
 
-      // Store token and user in localStorage
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      // Use AuthContext login method
+      login(token, user);
 
       // Redirect to home page
       navigate('/');
