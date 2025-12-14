@@ -85,7 +85,7 @@ const Cart = () => {
           <div className="cart-items">
             <h2>Cart Items ({getTotalItems()})</h2>
             
-            {cart.map((item) => (
+            {cart.filter(item => item.sweetId).map((item) => (
               <div key={item.sweetId} className="cart-item">
                 <div className="item-image">
                   {item.name.charAt(0)}
